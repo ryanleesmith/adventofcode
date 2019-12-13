@@ -121,52 +121,39 @@ class Program:
         self.running = False
         raise Finished
 
-def main():
-    global program
+grid = {}
+score = 0
 
-    _labels = ["x", "y", "Tile"]
-    _tiles = [" ", "|", u"\u2588", "_", "*"]
+def display():
+    global grid, score
+    system('clear')
+    print("Score: " + str(score))
+    for y in range(24):
+        line = ""
+        for x in range(44):
+            line += grid[x][y]
+        print(line)
+        
+def main():
+    global program, grid, score
+
+    _tiles = [" ", "|", u"\u2588", u"\u2594", "*"]
 
     program = Program(read().copy())
     program.data[0] = 2
 
     counter = 0
     running = True
-    blocks = 0
     x = None
     y = None
-    grid = {}
     ball = ()
     paddle = ()
-    built = False
-    score = 0
-    while running or blocks > 0:
-        #print("Blocks: " + str(blocks))
+    while running:
         try:
             program.run()
         except InputWait as iw:
-            built = True
-            system('clear')
-            print(iw.pos)
-            print("Score: " + str(score))
-            for y in range(24):
-                line = ""
-                for x in range(44):
-                    line += grid[x][y]
-                print(line)
-
-            #grid[ball[0]][ball[1]] = " "
-            #ball = (ball[0] - 1, ball[1] - 1)
-            #grid[ball[0]][ball[1]] = "*"
-
-            print(np.sign(paddle[0] - ball[1]))
-            program.write(iw.pos, np.sign(paddle[0] - ball[1]))
-
-            #grid[paddle[0]][paddle[1]] = " "
-            #paddle = (paddle[0] + move, paddle[1])
-            #grid[paddle[0]][paddle[1]] = "_"
-
-            #time.sleep(1)
+            display()
+            program.write(iw.pos, np.sign(ball[0] - paddle[0]))
         except OutputWait as ow:
             _out = ow.output
             if counter % 3 == 0:
@@ -180,17 +167,16 @@ def main():
                     grid[x] = {}
                 if not y in grid[x]:
                     grid[x][y] = {}
-                if not built or _out == 3 or _out == 4:
-                    grid[x][y] = _tiles[_out % 5]
                 if _out == 3:
                     paddle = (x,y)
                 if _out == 4:
                     ball = (x,y)
-            if counter % 3 == 2 and _out == 2:
-                blocks += 1
+                grid[x][y] = _tiles[_out % 5]
+            counter += 1
         except Finished:
             running = False
-        counter += 1
+
+    display()
 
 def read():
     input = open("input.txt", "r")
