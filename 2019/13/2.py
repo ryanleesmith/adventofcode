@@ -127,10 +127,10 @@ score = 0
 
 TILE = {
     0: " ",
-    1: Style.BRIGHT + Fore.BLACK + u"\u2588" + Style.RESET_ALL,
+    1: Style.BRIGHT + Fore.BLACK + u"\u2588",
     2: u"\u2588",
-    3: Fore.RED + u"\u25AC" + Style.RESET_ALL,
-    4: Fore.CYAN + u"\u25CF" + Style.RESET_ALL
+    3: Fore.RED + u"\u25AC",
+    4: Fore.CYAN + u"\u25CF"
 }
 
 COLOR = {
@@ -151,16 +151,13 @@ def display():
         line = f""
         for x in range(44):
             if grid[x][y] == 2:
-                line += Style.BRIGHT + COLOR[(y - 2) % 6] + TILE[grid[x][y]] + Style.RESET_ALL
-            else:
-                line += TILE[grid[x][y]]
-        print(line)
+                line += Style.BRIGHT + COLOR[(y - 2) % 6]
+            line += TILE[grid[x][y]]
+        print(line + Style.RESET_ALL)
     time.sleep(.01)
         
 def main():
     global program, grid, score
-
-    _tiles = [" ", "|", u"\u2588", u"\u2594", "*"]
 
     program = Program(read().copy())
     program.data[0] = 2
