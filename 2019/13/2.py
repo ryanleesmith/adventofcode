@@ -1,6 +1,7 @@
 from os import system
 import time
 import numpy as np
+from colorama import Fore, Style
 
 program = []
 
@@ -124,15 +125,37 @@ class Program:
 grid = {}
 score = 0
 
+TILE = {
+    0: " ",
+    1: Style.BRIGHT + Fore.BLACK + u"\u2588" + Style.RESET_ALL,
+    2: u"\u2588",
+    3: Fore.RED + u"\u25AC" + Style.RESET_ALL,
+    4: Fore.CYAN + u"\u25CF" + Style.RESET_ALL
+}
+
+COLOR = {
+    0: Fore.BLACK,
+    1: Fore.RED,
+    2: Fore.YELLOW,
+    3: Fore.BLUE,
+    4: Fore.MAGENTA,
+    5: Fore.GREEN
+}
+
 def display():
     global grid, score
     system('clear')
-    print("Score: " + str(score))
+    print(Style.BRIGHT + 'Score: ' + str(score) + Style.RESET_ALL)
+    row = 0
     for y in range(24):
-        line = ""
+        line = f""
         for x in range(44):
-            line += grid[x][y]
+            if grid[x][y] == 2:
+                line += Style.BRIGHT + COLOR[(y - 2) % 6] + TILE[grid[x][y]] + Style.RESET_ALL
+            else:
+                line += TILE[grid[x][y]]
         print(line)
+    time.sleep(.01)
         
 def main():
     global program, grid, score
@@ -171,7 +194,7 @@ def main():
                     paddle = (x,y)
                 if _out == 4:
                     ball = (x,y)
-                grid[x][y] = _tiles[_out % 5]
+                grid[x][y] = _out % 5
             counter += 1
         except Finished:
             running = False
