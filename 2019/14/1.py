@@ -52,6 +52,7 @@ def main():
 
     reactions["FUEL"].make()
     print("Needed " + str(ore) + " ORE")
+    print(chemicals)
 
 def read():
     _input = open("input.txt", "r")
