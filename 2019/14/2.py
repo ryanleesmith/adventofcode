@@ -30,6 +30,7 @@ class Reaction:
                 chemical.make(ratio)
             else:
                 ratio = math.ceil(qty / self._out.qty) * chemical.qty - supply[chemical.name]
+                supply[chemical.name] -= supply[chemical.name]
                 while supply[chemical.name] < ratio:
                     chemical.make(ratio)
                 supply[chemical.name] -= ratio
@@ -48,10 +49,10 @@ def main():
         for chemical in _in:
             supply[chemical.name] = 0
     
-    reactions["FUEL"].make(1)
+    reactions["FUEL"].make(1122036)
         
     print("Needed " + str(ore) + " ORE")
-    print(supply)
+    #print(supply)
 
 def read():
     _input = open("input.txt", "r")
