@@ -155,7 +155,6 @@ def move(response):
                 return False
             counter += 1
     elif response == 1 or response == 2:
-        explored = False
         if not blocked and pos in grid and grid[pos] != "_" and grid[pos] != "O":
             grid[pos] = "."
         x = pos[0] + adjustment[direction % 4][0]
@@ -197,21 +196,6 @@ def move(response):
                         open = counter
                         grid[pos] = "_"
                         blocked = True
-                counter += 1
-            if open != None:
-                direction = open
-            else:
-                direction = counter
-        elif explored:
-            open = None
-            counter = 0
-            for i in adjustment:
-                test = (pos[0] + i[0], pos[1] + i[1])
-                if not test in grid:
-                    open = None
-                    break
-                elif grid[test] == ".":
-                    open = counter
                 counter += 1
             if open != None:
                 direction = open
