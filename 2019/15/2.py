@@ -132,7 +132,7 @@ def display():
         print(line)
 
 def move(response):
-    global grid, direction, adjustment, pos, blocked, delay, moves
+    global grid, direction, adjustment, pos, blocked, moves, oxygen
     if response == 0:
         x = pos[0] + adjustment[direction % 4][0]
         y = pos[1] + adjustment[direction % 4][1]
@@ -149,15 +149,20 @@ def move(response):
             if (counter > 4 and grid[x, y] == "."):
                 new = True
                 blocked = True
-                grid[pos] = "_"
+                if grid[pos] != "O":
+                    grid[pos] = "_"
+            if counter > 8:
+                return False
             counter += 1
-    elif response == 1:
+    elif response == 1 or response == 2:
         explored = False
-        if not blocked and pos in grid and grid[pos] != "_":
+        if not blocked and pos in grid and grid[pos] != "_" and grid[pos] != "O":
             grid[pos] = "."
         x = pos[0] + adjustment[direction % 4][0]
         y = pos[1] + adjustment[direction % 4][1]
         pos = (x, y)
+        if response == 2:
+            oxygen = pos
         if not pos in grid:
             moves += 1
         else:
@@ -197,7 +202,6 @@ def move(response):
                 direction = open
             else:
                 direction = counter
-            delay = 0.01
         elif explored:
             open = None
             counter = 0
@@ -213,8 +217,34 @@ def move(response):
                 direction = open
             else:
                 direction = counter
-    elif response == 2:
-        pass
+    return True
+
+def spread():
+    global grid, adjustment, minutes
+
+    minutes += 1
+
+    oxygens = []
+    for y in range(-21, 20):
+        for x in range(-21, 20):
+            pos = (x, y)
+            if grid[pos] == "O":
+                for i in adjustment:
+                    new = (pos[0] + i[0], pos[1] + i[1])
+                    if grid[new] == " ":
+                        oxygens.append(new)
+    for oxygen in oxygens:
+        grid[oxygen] = "O"
+
+def full():
+    global grid
+
+    for y in range(-21, 20):
+        for x in range(-21, 20):
+            pos = (x, y)
+            if grid[pos] == " ":
+                return False
+    return True
 
 program = []
 grid = {(0, 0): "x"}
@@ -224,6 +254,8 @@ adjustment = [(0, -1), (1, 0), (0, 1), (-1, 0)]
 pos = (0,0)
 blocked = False
 moves = 0
+oxygen = None
+minutes = 0
         
 def main():
     global program, grid, direction, directions, pos
@@ -238,13 +270,26 @@ def main():
             program.write(iw.pos, directions[direction % 4])
         except OutputWait as ow:
             _out = ow.output
-            move(_out)
-            if _out == 2:
+            if not move(_out):
                 found = True
             display()
         except Finished:
             found = True
-    print(str(moves + 1))
+    for y in range(-21, 20):
+        for x in range(-21, 20):
+            if (x, y) in grid:
+                if grid[(x, y)] == "_" or grid[(x, y)] == "/":
+                    grid[(x, y)] = " "
+            else:
+                grid[(x, y)] = "#"
+
+    grid[oxygen] = "O"
+    grid[pos] = " "
+    display()
+
+    while not full():
+        spread()
+        display()
 
 def read():
     input = open("input.txt", "r")
