@@ -21,9 +21,9 @@ def main():
         elif i + 2 < len(adapters) and adapters[i + 2] - adapters[i] == 2:
             if adapters[i + 2] - adapters[i - 1] != 3:
                 count = 2
-        paths.append(count)
+        if count != 0:
+            paths.append(count)
 
-    paths = list(filter(lambda x: x != 0 and x != 1, paths))
     total = reduce(lambda x, y: x*y, paths)
     print(total)
 
