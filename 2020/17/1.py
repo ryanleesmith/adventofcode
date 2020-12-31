@@ -51,7 +51,7 @@ def getNeighbors(pos):
                     continue
                 if (x, y, z) in cubes:
                     active = active + 1
-    return active       
+    return active
 
 if __name__ == "__main__":
     main()
