@@ -26,7 +26,7 @@ class Cups:
             return None
 
     def getMax(self, playing):
-        return self.key[max({k:v for k,v in self.key.items() if k not in playing})]
+        return self.key[max({k for k in self.key.keys() if k not in playing})]
 
     def getNext(self):
         next = self.curr.getNext()
