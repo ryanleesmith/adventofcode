@@ -7,7 +7,7 @@ def main():
     for dot in dots:
         maxX = max(maxX, dot[0] + 1)
         maxY = max(maxY, dot[1] + 1)
-    paper = np.full((maxY, maxX), ".", dtype=np.str)
+    paper = np.full((maxY, maxX), " ", dtype=np.str)
     for dot in dots:
         paper[dot[1]][dot[0]] = "#"
     for fold in folds:
